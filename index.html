@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>游戏 · Ziqiang Pei</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: system-ui, sans-serif;
+      background: light-dark(#f3f1e9, #161815);
+      color: light-dark(#202722, #ecede4);
+    }
+    body { margin: 0; }
+    main { max-width: 42rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    h1 { font-size: clamp(2.5rem, 8vw, 4rem); margin: 1.5rem 0; }
+    ul { padding: 0; margin: 0; list-style: none; }
+    li + li { margin-top: 1rem; }
+    a { color: light-dark(#315e42, #aad9b4); }
+    .game {
+      display: block;
+      border: 1px solid light-dark(#c7cabb, #484e43);
+      border-radius: 0.75rem;
+      background: light-dark(#fffef8, #22261f);
+      padding: 1.5rem;
+      color: inherit;
+      text-decoration: none;
+    }
+    .game:hover { border-color: currentColor; }
+    .game:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+    h2 { margin: 0; font-size: 1.35rem; }
+    p { margin: 0.5rem 0 1rem; line-height: 1.5; }
+    .play { color: light-dark(#315e42, #aad9b4); text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main>
+    <a href="../">返回个人主页</a>
+    <h1>游戏</h1>
+    <ul>
+      <li>
+        <a class="game" href="mota/">
+          <h2>24 层魔塔</h2>
+          <p>收集钥匙、规划战斗，在浏览器里挑战经典的 24 层魔塔。</p>
+          <span class="play">开始游戏</span>
+        </a>
+      </li>
+    </ul>
+  </main>
+</body>
+</html>

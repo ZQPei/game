@@ -1,0 +1,55 @@
+name: Deploy game catalog
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out game catalog
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Check out Magic Tower
+        uses: actions/checkout@v6
+        with:
+          repository: ZQPei/mota
+          ref: main
+          path: sources/mota
+          persist-credentials: false
+      - name: Assemble site
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/mota
+          install -m 644 index.html public/index.html
+          git -C sources/mota archive HEAD | tar -x -C public/mota
+          test -f public/mota/index.html
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
