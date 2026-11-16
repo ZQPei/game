@@ -34,15 +34,24 @@ jobs:
           ref: 09c51774cd77aad750bd2d6c42af2b1020cb668d
           path: sources/saltline
           persist-credentials: false
+      - name: Check out Splendor Pokémon
+        uses: actions/checkout@v6
+        with:
+          repository: ZQPei/splendor-pokemon
+          ref: main
+          path: sources/splendor-pokemon
+          persist-credentials: false
       - name: Assemble site
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p public/mota public/saltline
+          mkdir -p public/mota public/saltline public/splendor-pokemon
           install -m 644 index.html public/index.html
           git -C sources/mota archive HEAD | tar -x -C public/mota
           install -m 644 sources/saltline/index.html public/saltline/index.html
+          git -C sources/splendor-pokemon archive HEAD:dist | tar -x -C public/splendor-pokemon
           test -f public/mota/index.html
+          test -f public/splendor-pokemon/index.html
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
