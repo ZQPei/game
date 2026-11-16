@@ -45,8 +45,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p public/mota public/saltline public/splendor-pokemon
+          mkdir -p public/assets public/mota public/saltline public/splendor-pokemon
           install -m 644 index.html public/index.html
+          install -m 644 assets/*.webp public/assets/
           git -C sources/mota archive HEAD | tar -x -C public/mota
           install -m 644 sources/saltline/index.html public/saltline/index.html
           git -C sources/splendor-pokemon archive HEAD:dist | tar -x -C public/splendor-pokemon

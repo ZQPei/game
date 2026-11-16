@@ -3,60 +3,90 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="在浏览器里玩 24 层魔塔、Saltline 和璀璨宝石宝可梦。">
   <title>游戏 · Ziqiang Pei</title>
   <style>
     :root {
       color-scheme: light dark;
-      font-family: system-ui, sans-serif;
-      background: light-dark(#f3f1e9, #161815);
-      color: light-dark(#202722, #ecede4);
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      background: light-dark(#f3f4ef, #181c19);
+      color: light-dark(#202923, #f2f4ec);
+      --surface: light-dark(#fffefa, #242b25);
+      --muted: light-dark(#566259, #c0cbbf);
+      --line: light-dark(#d9dfd6, #3a463d);
+      --accent: light-dark(#2f6549, #b1d4b5);
+      --arrow-background: light-dark(#edf2ea, #303e33);
     }
+    * { box-sizing: border-box; }
     body { margin: 0; }
-    main { max-width: 42rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
-    h1 { font-size: clamp(2.5rem, 8vw, 4rem); margin: 1.5rem 0; }
-    ul { padding: 0; margin: 0; list-style: none; }
-    li + li { margin-top: 1rem; }
-    a { color: light-dark(#315e42, #aad9b4); }
+    main { width: min(1120px, calc(100% - 2.5rem)); margin-inline: auto; padding-block: clamp(2rem, 6vw, 5rem) 4rem; }
+    h1 { margin: 0 0 clamp(1.5rem, 3.5vw, 2.5rem); font-size: clamp(2.75rem, 6vw, 4.75rem); letter-spacing: -.06em; line-height: 1.08; }
+    .games { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(1rem, 2.1vw, 1.6rem); margin: 0; padding: 0; list-style: none; }
     .game {
-      display: block;
-      border: 1px solid light-dark(#c7cabb, #484e43);
-      border-radius: 0.75rem;
-      background: light-dark(#fffef8, #22261f);
-      padding: 1.5rem;
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      background: var(--surface);
       color: inherit;
       text-decoration: none;
+      box-shadow: 0 3px 12px #1d3e2610;
+      transition: border-color .18s, box-shadow .18s;
     }
-    .game:hover { border-color: currentColor; }
-    .game:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
-    h2 { margin: 0; font-size: 1.35rem; }
-    p { margin: 0.5rem 0 1rem; line-height: 1.5; }
-    .play { color: light-dark(#315e42, #aad9b4); text-decoration: underline; }
+    .game:hover { border-color: var(--accent); box-shadow: 0 8px 24px #1d3e2622; }
+    .game:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    .game img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; background: #29332c; }
+    .game-info { display: grid; gap: .45rem; padding: 1.15rem 1.2rem 1.35rem; }
+    .game-heading { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+    h2 { margin: 0; font-size: clamp(1.15rem, 2vw, 1.46rem); line-height: 1.3; letter-spacing: -.025em; }
+    .game p { margin: 0; color: var(--muted); font-size: .94rem; line-height: 1.7; }
+    .arrow {
+      display: grid;
+      place-items: center;
+      flex: 0 0 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--arrow-background);
+      color: var(--accent);
+      line-height: 1;
+    }
+    .game:hover .arrow { background: var(--accent); color: var(--surface); }
+    @media (min-width: 39rem) { .games { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 61rem) { .games { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (prefers-reduced-motion: reduce) { .game { transition: none; } }
   </style>
 </head>
 <body>
   <main>
-    <a href="../">返回个人主页</a>
     <h1>游戏</h1>
-    <ul>
+    <ul class="games">
       <li>
         <a class="game" href="mota/">
-          <h2>24 层魔塔</h2>
-          <p>收集钥匙、规划战斗，在浏览器里挑战经典的 24 层魔塔。</p>
-          <span class="play">开始游戏</span>
+          <img src="assets/mota.webp" width="800" height="500" alt="">
+          <div class="game-info">
+            <div class="game-heading"><h2>24 层魔塔</h2><span class="arrow" aria-hidden="true">→</span></div>
+            <p>收集钥匙和道具，规划战斗顺序，一层层闯过像素魔塔。</p>
+          </div>
         </a>
       </li>
       <li>
         <a class="game" href="saltline/">
-          <h2>Saltline</h2>
-          <p>Felix Rieseberg 用 Claude Fable 5.2 制作的浏览器射击游戏。</p>
-          <span class="play">开始游戏</span>
+          <img src="assets/saltline.webp" width="800" height="500" alt="">
+          <div class="game-info">
+            <div class="game-heading"><h2>Saltline</h2><span class="arrow" aria-hidden="true">→</span></div>
+            <p>潜入雨中的港口，切断三处中继站并撤离。由 Felix Rieseberg 用 Claude Fable 5.2 制作。</p>
+          </div>
         </a>
       </li>
       <li>
         <a class="game" href="splendor-pokemon/">
-          <h2>璀璨宝石 · 宝可梦</h2>
-          <p>收集精灵球，捕捉和进化宝可梦。支持单人对战、2–4 人同屏和卡牌查询。</p>
-          <span class="play">开始游戏</span>
+          <img src="assets/splendor-pokemon.webp" width="800" height="500" alt="">
+          <div class="game-info">
+            <div class="game-heading"><h2>璀璨宝石 · 宝可梦</h2><span class="arrow" aria-hidden="true">→</span></div>
+            <p>收集精灵球，捕捉和进化宝可梦。支持单人对战、2–4 人同屏和卡牌查询。</p>
+          </div>
         </a>
       </li>
     </ul>
