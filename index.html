@@ -5,6 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="在浏览器里玩 24 层魔塔、Saltline 和璀璨宝石宝可梦。">
   <title>Play Hub</title>
+  <script>
+    const themeStorageKey = "play-hub-theme";
+    const root = document.documentElement;
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+    try {
+      const savedTheme = localStorage.getItem(themeStorageKey);
+      if (savedTheme === "light" || savedTheme === "dark") {
+        root.dataset.theme = savedTheme;
+      }
+    } catch {
+      // The toggle still works when browser storage is unavailable.
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const themeToggle = document.getElementById("theme-toggle");
+      const isDark = () => (root.dataset.theme ?? (systemTheme.matches ? "dark" : "light")) === "dark";
+      const updateToggle = () => themeToggle.setAttribute("aria-pressed", String(isDark()));
+
+      themeToggle.addEventListener("click", () => {
+        const theme = isDark() ? "light" : "dark";
+        root.dataset.theme = theme;
+        updateToggle();
+        try {
+          localStorage.setItem(themeStorageKey, theme);
+        } catch {
+          // Keep the selected theme for this visit.
+        }
+      });
+      systemTheme.addEventListener("change", updateToggle);
+      updateToggle();
+      themeToggle.hidden = false;
+    });
+  </script>
   <style>
     :root {
       color-scheme: light dark;
@@ -17,10 +51,57 @@
       --accent: light-dark(#2f6549, #b1d4b5);
       --arrow-background: light-dark(#edf2ea, #303e33);
     }
+    :root[data-theme="light"] { color-scheme: light; }
+    :root[data-theme="dark"] { color-scheme: dark; }
     * { box-sizing: border-box; }
     body { margin: 0; }
     main { width: min(1120px, calc(100% - 2.5rem)); margin-inline: auto; padding-block: clamp(2rem, 6vw, 5rem) 4rem; }
-    h1 { margin: 0 0 clamp(1.5rem, 3.5vw, 2.5rem); font-size: clamp(2.75rem, 6vw, 4.75rem); letter-spacing: -.06em; line-height: 1.08; }
+    .page-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      margin-bottom: clamp(1.5rem, 3.5vw, 2.5rem);
+    }
+    h1 { margin: 0; font-size: clamp(2.75rem, 6vw, 4.75rem); letter-spacing: -.06em; line-height: 1.08; }
+    .theme-toggle {
+      align-items: center;
+      gap: .5rem;
+      min-height: 44px;
+      margin-inline-start: auto;
+      padding: .5rem .75rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: inherit;
+      font: inherit;
+      font-size: .875rem;
+      cursor: pointer;
+    }
+    .theme-toggle:not([hidden]) { display: inline-flex; }
+    .theme-toggle:hover { border-color: var(--accent); }
+    .theme-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    .theme-toggle-indicator {
+      display: flex;
+      align-items: center;
+      width: 1.75rem;
+      height: 1rem;
+      padding: .125rem;
+      border-radius: 999px;
+      background: var(--muted);
+    }
+    .theme-toggle-indicator::before {
+      width: .75rem;
+      height: .75rem;
+      border-radius: 50%;
+      background: var(--surface);
+      content: "";
+    }
+    .theme-toggle[aria-pressed="true"] .theme-toggle-indicator {
+      justify-content: flex-end;
+      background: var(--accent);
+    }
     .games { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(1rem, 2.1vw, 1.6rem); margin: 0; padding: 0; list-style: none; }
     .game {
       display: flex;
@@ -60,7 +141,13 @@
 </head>
 <body>
   <main>
-    <h1>游戏</h1>
+    <header class="page-header">
+      <h1>Play Hub</h1>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" hidden>
+        <span class="theme-toggle-indicator" aria-hidden="true"></span>
+        深色模式
+      </button>
+    </header>
     <ul class="games">
       <li>
         <a class="game" href="mota/">
