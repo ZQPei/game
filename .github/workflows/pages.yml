@@ -27,13 +27,21 @@ jobs:
           ref: main
           path: sources/mota
           persist-credentials: false
+      - name: Check out Saltline mirror
+        uses: actions/checkout@v6
+        with:
+          repository: realcodebear/saltline-fable-5.2
+          ref: 09c51774cd77aad750bd2d6c42af2b1020cb668d
+          path: sources/saltline
+          persist-credentials: false
       - name: Assemble site
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p public/mota
+          mkdir -p public/mota public/saltline
           install -m 644 index.html public/index.html
           git -C sources/mota archive HEAD | tar -x -C public/mota
+          install -m 644 sources/saltline/index.html public/saltline/index.html
           test -f public/mota/index.html
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
