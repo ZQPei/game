@@ -43,6 +43,8 @@ jobs:
           persist-credentials: false
       - name: Assemble site
         shell: bash
+        env:
+          ROOM_SERVER: ${{ vars.SPLENDOR_POKEMON_ROOM_SERVER }}
         run: |
           set -euo pipefail
           mkdir -p public/assets public/mota public/saltline public/splendor-pokemon
@@ -53,6 +55,27 @@ jobs:
           git -C sources/splendor-pokemon archive HEAD:dist | tar -x -C public/splendor-pokemon
           test -f public/mota/index.html
           test -f public/splendor-pokemon/index.html
+          if [[ -n "$ROOM_SERVER" ]]; then
+            python3 - <<'PY'
+          import html
+          import os
+          from pathlib import Path
+          from urllib.parse import urlsplit
+
+          server = os.environ["ROOM_SERVER"].strip().rstrip("/")
+          url = urlsplit(server)
+          if (url.scheme != "https" or not url.hostname or url.username or url.password
+              or url.path or url.query or url.fragment):
+              raise SystemExit("SPLENDOR_POKEMON_ROOM_SERVER must be an HTTPS origin")
+
+          page = Path("public/splendor-pokemon/index.html")
+          marker = '<meta name="room-server" content="">'
+          source = page.read_text(encoding="utf-8")
+          if source.count(marker) != 1:
+              raise SystemExit("Missing room-server metadata in the game page")
+          page.write_text(source.replace(marker, f'<meta name="room-server" content="{html.escape(server)}">'), encoding="utf-8")
+          PY
+          fi
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
