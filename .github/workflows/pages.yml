@@ -41,20 +41,29 @@ jobs:
           ref: main
           path: sources/splendor-pokemon
           persist-credentials: false
+      - name: Check out Ember Front
+        uses: actions/checkout@v6
+        with:
+          repository: ZQPei/ember-front
+          ref: main
+          path: sources/ember-front
+          persist-credentials: false
       - name: Assemble site
         shell: bash
         env:
           ROOM_SERVER: ${{ vars.SPLENDOR_POKEMON_ROOM_SERVER }}
         run: |
           set -euo pipefail
-          mkdir -p public/assets public/mota public/saltline public/splendor-pokemon
+          mkdir -p public/assets public/mota public/saltline public/splendor-pokemon public/ember-front
           install -m 644 index.html public/index.html
           install -m 644 assets/*.webp public/assets/
           git -C sources/mota archive HEAD | tar -x -C public/mota
           install -m 644 sources/saltline/index.html public/saltline/index.html
           git -C sources/splendor-pokemon archive HEAD:dist | tar -x -C public/splendor-pokemon
+          git -C sources/ember-front archive HEAD | tar -x -C public/ember-front
           test -f public/mota/index.html
           test -f public/splendor-pokemon/index.html
+          test -f public/ember-front/index.html
           if [[ -n "$ROOM_SERVER" ]]; then
             python3 - <<'PY'
           import html
